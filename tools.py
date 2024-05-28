@@ -1,9 +1,81 @@
+from textwrap import dedent
 from crewai_tools import BaseTool
 from pydantic.v1 import BaseModel, Field
-from typing import Optional, Type, Any
+from typing import Type
 import requests
-from json import loads
+from json import loads, dumps
 from datetime import datetime
+import os
+
+
+class SearchStackOverflowToolSchema(BaseModel):
+    """Input for SearchStackOverflowTool."""
+
+    query: str = Field(..., description="Mandatory search query to search for.")
+
+
+class SearchStackOverflowTool(BaseTool):
+    name: str = "Search Stack Overflow"
+    description: str = (
+        "Searches Stack Overflow for relevant posts based on the provided query."
+    )
+    args_schema: Type[BaseModel] = SearchStackOverflowToolSchema
+    search_url: str = "https://google.serper.dev/search"
+
+    def _format_organic_result(self, result: dict) -> str:
+        #   "title": "Copy the text to the Clipboard without using any input",
+        #   "link": "https://stackoverflow.com/questions/63033012/copy-the-text-to-the-clipboard-without-using-any-input",
+        #   "snippet": "How to copy text to the clipboard in Javascript? ... How to copy text to clipboard HTML? 1 · Copy text to clipboard without using IDs · Hot ...",
+        #   "sitelinks": [
+        #     {
+        #       "title": "3 answers",
+        #       "link": "https://stackoverflow.com/a/63035539" <-- Best answer URL
+        #     }
+        #   ],
+
+        question_title = result.get("title")
+        question_link = result.get("link")
+        snippet = result.get("snippet")
+
+        try:
+            best_answer_url = result.get("sitelinks")[0].get("link")  # type: ignore
+        except Exception:
+            best_answer_url = "No best answer found."
+
+        return dedent(
+            f"""
+            Question title: {question_title}
+            Question link: {question_link}
+            Snippet: {snippet}
+            Best answer URL: {best_answer_url}
+        """
+        )
+
+    def _run(self, **kwargs) -> str:  # type: ignore
+        query = kwargs.get("query")
+        if not query:
+            return "No query provided."
+
+        if "site:stackoverflow.com" not in query:
+            query += " site:stackoverflow.com"
+
+        payload = dumps({"q": query})
+        headers = {
+            "X-API-KEY": os.environ["SERPER_API_KEY"],
+            "content-type": "application/json",
+        }
+        response = requests.request(
+            "POST", self.search_url, headers=headers, data=payload
+        )
+        results = response.json()
+        if not "organic" in results:
+            raise NotImplementedError("No organic search results found.")
+
+        results = results["organic"]
+
+        string = "\n---\n".join(map(self._format_organic_result, results))
+
+        return f"\nSearch results: {string}\n"
 
 
 class StackOverflowAnswerToolSchema(BaseModel):
