@@ -2,11 +2,17 @@ from dotenv import load_dotenv
 
 from crewai import Agent, Task, Crew, Process
 from tools import SearchStackOverflowTool, StackOverflowAnswerTool
+from langchain_anthropic import ChatAnthropic
+from datetime import datetime
+
 
 load_dotenv()
 
+claude3Sonnet = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)  # type: ignore
+
 # Définir le topic global
-TOPIC = "JavaScript clipboard"
+TOPIC = "Python Yield"
+LANGUAGE = "French"
 
 search_stackoverflow_tool = SearchStackOverflowTool()
 
@@ -20,7 +26,8 @@ stackoverflow_search_agent = Agent(
         "posts related to the topic. Your expertise lies in identifying valuable information from search results."
     ),
     tools=[search_stackoverflow_tool],
-    allow_delegation=True,
+    allow_delegation=False,
+    llm=claude3Sonnet,
 )
 
 # Agent 2: stackoverflow_summary_agent
@@ -38,7 +45,8 @@ stackoverflow_summary_agent = Agent(
     ),
     # TODO : expected output.
     tools=[get_stackoverflow_answer],
-    allow_delegation=True,
+    allow_delegation=False,
+    llm=claude3Sonnet,
 )
 
 # Agent 3: blog_writer_agent
@@ -49,10 +57,14 @@ blog_writer_agent = Agent(
     memory=True,
     backstory=(
         "With a talent for creating engaging and informative content, you will write a comprehensive blog post "
-        "that highlights the key points and solutions "  # TODO : define the tone, style and structure of the blog post
+        "that highlights the key points and solutions. "
+        "You understand that the readers are beginners and need a detailed explanation of the topic. "
+        "You are a native speaker of {language} language and can write in markdown format. "
+        # TODO : define the tone, style and structure of the blog post
     ),
     tools=[],
-    allow_delegation=True,
+    allow_delegation=False,
+    llm=claude3Sonnet,
 )
 
 
@@ -68,6 +80,10 @@ search_task = Task(
 )
 
 # Tâche 2: Lecture et résumé des réponses de Stack Overflow
+
+# TODO : this is not actually a summary. Because it shortens the text too much and looses a lot of information.
+# it should be more like a detailed summary, or a rephrasing of the answer.
+#! Or better : "techical report on the answers"
 summary_task = Task(
     description=(
         "Read the answers from the provided Stack Overflow URLs using the StackOverflowAnswerTool. "  # TODO : check tool name
@@ -82,11 +98,13 @@ summary_task = Task(
 write_task = Task(
     description=(
         "Write a comprehensive blog post on {topic} based on the summaries of the selected Stack Overflow answers. "
-        "Ensure the article is informative, engaging, and formatted in markdown."
+        "Ensure the article is informative, engaging, and formatted in markdown. "
+        "The blog post is targeted towards beginners. "
+        "Language of the blog post should be {language}."
     ),
-    expected_output="A markdown formatted blog post on {topic}.",
+    expected_output="A markdown formatted blog post on {topic} in {language}.",
     agent=blog_writer_agent,
-    output_file="blog_post.md",
+    output_file=f"blog_post_{TOPIC}_{LANGUAGE}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.md",
 )
 
 
@@ -98,5 +116,11 @@ crew = Crew(
 )
 
 # Lancer le processus avec le topic défini
-result = crew.kickoff(inputs={"topic": TOPIC})
+result = crew.kickoff(inputs={"topic": TOPIC, "language": LANGUAGE})
 print(result)
+
+
+# TODO: Ensure that the code blocks written can run without any errors, or that explanations are provided for any errors that may occur. For instance, imports should be correct, or functions and variables not defined should be explained.
+
+# TODO : SEO optimization
+# Add context, so that it doesn't write "Bienvenue sur ce blog dédié au développement Python ! "
