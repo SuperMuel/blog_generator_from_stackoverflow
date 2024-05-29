@@ -51,11 +51,11 @@ SERPER_API_KEY="Your Serper api"
 
    You can test the endpoint using `curl` or Postman:
 
-   ```sh
-   curl -X POST http://127.0.0.1:5000/generate-article \
-        -H "Content-Type: application/json" \
-        -d '{"topic": "La programmation asynchrone en Python", "language": "French"}'
-   ```
+```sh
+curl -X POST http://127.0.0.1:5000/generate-article \
+    -H "Content-Type: application/json" \
+    -d '{"topic": "La programmation asynchrone en Python", "language": "French"}'
+```
 
 ## On Heroku
 
