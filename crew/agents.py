@@ -1,14 +1,12 @@
 from crewai import Agent
 from langchain_anthropic import ChatAnthropic
-from tools import SearchStackOverflowTool, StackOverflowAnswerTool
-
-claude3Sonnet = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)  # type: ignore
+from crew.tools import SearchStackOverflowTool, StackOverflowAnswerTool
 
 
 class CustomAgents:
     def __init__(self):
-        self.claude3Sonnet = claude3Sonnet
-        self.search_stackoverflow_tool = SearchStackOverflowTool()
+        self.claude3Sonnet = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)  # type: ignore
+        self.search_stackoverflow_tool = SearchStackOverflowTool()  # type: ignore
         self.get_stackoverflow_answer = StackOverflowAnswerTool()
 
     def stackoverflow_search_agent(self):
@@ -55,6 +53,7 @@ class CustomAgents:
                 "You are a native speaker of {language} language and can write in markdown format. "
                 "You know how to apply feedback you receive on the topic and use your personal knowledge to make the necessary revisions."
                 "Metaphors are great for explaining a complicated subject."
+                # TODO : define the tone, style and structure of the blog post
             ),
             tools=[],
             allow_delegation=False,
