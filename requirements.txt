@@ -3,3 +3,4 @@ crewai[tools]
 langchain-anthropic
 python-dotenv
 flask
+gunicorn
