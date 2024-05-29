@@ -11,14 +11,26 @@ app = Flask(__name__)
 load_dotenv()
 
 
-def generate_article_and_callback(topic, language, callback_url):
+def generate_article_and_callback(topic, language, callback_url, custom_args):
     try:
         article = generate_article(topic=topic, language=language)
-        response = requests.post(callback_url, json={"article": article})
+        response = requests.post(
+            callback_url,
+            json={
+                "article": article,
+                "custom_args": custom_args,
+            },
+        )
         response.raise_for_status()
     except Exception as e:
         error_message = str(e)
-        requests.post(callback_url, json={"error": error_message})
+        requests.post(
+            callback_url,
+            json={
+                "error": error_message,
+                "custom_args": custom_args,
+            },
+        )
 
 
 @app.route("/generate-article", methods=["POST"])
@@ -31,6 +43,7 @@ def generate_article_endpoint():
     topic = data.get("topic")
     language = data.get("language", "French")
     callback_url = data.get("callback_url")
+    custom_args = data.get("custom_args", {})
 
     if not topic:
         return jsonify({"error": "Topic is required"}), 400
@@ -40,7 +53,8 @@ def generate_article_endpoint():
 
     # Start the background thread
     thread = threading.Thread(
-        target=generate_article_and_callback, args=(topic, language, callback_url)
+        target=generate_article_and_callback,
+        args=(topic, language, callback_url, custom_args),
     )
     thread.start()
 

@@ -110,13 +110,21 @@ heroku open
 - **Endpoint**: `/generate-article`
 - **Method**: `POST`
 - **Payload**:
+
   ```json
   {
     "topic": "Your topic here",
     "language": "Language here (e.g., 'EN', 'FR' or 'French')",
-    "callback_url": "http://your-callback-url"
+    "callback_url": "Your callback URL here",
+
+    // Optional
+    "custom_args": {
+      "key1": "value1",
+      "key2": "value2"
+    }
   }
   ```
+
 - **Response**:
   ```json
   {
@@ -133,12 +141,25 @@ Once the article is generated, the server will send a POST request to the provid
   ```json
   {
     "article": "Generated article content here"
+
+    // If custom_args are provided in the request
+    "custom_args": {
+      "key1": "value1",
+      "key2": "value2"
+    }
   }
   ```
 
 - **Error Response** (if an error occurs during article generation):
+
   ```json
   {
     "error": "Error message here"
+
+    // If custom_args are provided in the request
+    "custom_args": {
+      "key1": "value1",
+      "key2": "value2"
+    }
   }
   ```
