@@ -51,11 +51,11 @@ SERPER_API_KEY="Your Serper api"
 
    You can test the endpoint using `curl` or Postman:
 
-```sh
-curl -X POST http://127.0.0.1:5000/generate-article \
-    -H "Content-Type: application/json" \
-    -d '{"topic": "La programmation asynchrone en Python", "language": "French"}'
-```
+   ```sh
+   curl -X POST http://127.0.0.1:5000/generate-article \
+       -H "Content-Type: application/json" \
+       -d '{"topic": "La programmation asynchrone en Python", "language": "French", "callback_url": "http://your-callback-url"}'
+   ```
 
 ## On Heroku
 
@@ -113,12 +113,32 @@ heroku open
   ```json
   {
     "topic": "Your topic here",
-    "language": "Language code here (e.g., 'EN', 'FR')"
+    "language": "Language here (e.g., 'EN', 'FR' or 'French')",
+    "callback_url": "http://your-callback-url"
   }
   ```
 - **Response**:
   ```json
   {
+    "message": "Article generation started"
+  }
+  ```
+
+### Callback URL Response
+
+Once the article is generated, the server will send a POST request to the provided `callback_url` with the following payload:
+
+- **Success Response**:
+
+  ```json
+  {
     "article": "Generated article content here"
+  }
+  ```
+
+- **Error Response** (if an error occurs during article generation):
+  ```json
+  {
+    "error": "Error message here"
   }
   ```

@@ -1,4 +1,3 @@
-from datetime import datetime
 from crewai import Task
 from textwrap import dedent
 
@@ -47,7 +46,6 @@ class CustomTasks:
             ),
             expected_output=f"A markdown formatted blog post on {topic} in {language}.",
             agent=agent,
-            output_file=f"posts/blog_post_{topic}_{language}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.md",  # todo delete that
         )
 
     def evaluation_task(self, agent, context_task):
@@ -75,5 +73,4 @@ class CustomTasks:
             expected_output=f"A revised markdown formatted blog post on {topic} in {language}.",
             agent=agent,
             context=context_tasks,
-            output_file=f"posts/revised_blog_post_{topic}_{language}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.md",  # todo delete that
         )
