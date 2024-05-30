@@ -46,7 +46,7 @@ class CustomTasks:
                 Do not include sources or references, as this task will be handled separately.
                 """
             ),
-            expected_output=f"A markdown formatted blog post on {topic} in {language}.",
+            expected_output=f"A 700 words markdown formatted blog post on {topic} in {language}.",
             agent=agent,
         )
 

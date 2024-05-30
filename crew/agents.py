@@ -24,7 +24,9 @@ class CustomAgents:
             llm=self.claude3Sonnet,
         )
 
-    def stackoverflow_report_agent(self):
+    def stackoverflow_report_agent(
+        self,
+    ):  # TODO : this do not take into account the question but only the answers. It should be improved, as questions can provide valuable information on the difficulty of the topic.
         return Agent(
             role="Report Agent",
             goal="Create a detailed technical report from Stack Overflow answers for {topic}",
