@@ -1,15 +1,19 @@
 from crewai import Agent
 from langchain_anthropic import ChatAnthropic
 from crew.tools import SearchStackOverflowTool, StackOverflowAnswerTool
+from crewai_tools import SerperDevTool
 
 
 class CustomAgents:
+    """Custom agents for the crew."""
+
     def __init__(self):
         self.claude3Sonnet = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)  # type: ignore
         self.search_stackoverflow_tool = SearchStackOverflowTool()  # type: ignore
         self.get_stackoverflow_answer = StackOverflowAnswerTool()
 
     def stackoverflow_search_agent(self):
+        """Agent that searches Stack Overflow for relevant posts related to a topic."""
         return Agent(
             role="Search Agent",
             goal="Find relevant Stack Overflow posts related to {topic}",
@@ -27,6 +31,7 @@ class CustomAgents:
     def stackoverflow_report_agent(
         self,
     ):  # TODO : this do not take into account the question but only the answers. It should be improved, as questions can provide valuable information on the difficulty of the topic.
+        """Agent that creates a detailed technical report from Stack Overflow answers."""
         return Agent(
             role="Report Agent",
             goal="Create a detailed technical report from Stack Overflow answers for {topic}",
@@ -42,7 +47,25 @@ class CustomAgents:
             llm=self.claude3Sonnet,
         )
 
+    def reliable_sources_agent(self):
+        """Agent that finds reliable sources related to a topic for further reading."""
+        return Agent(
+            role="Reliable Sources Agent",
+            goal="Find reliable sources related to {topic} for further reading",
+            verbose=True,
+            memory=True,
+            backstory=(
+                "As a seasoned researcher, your expertise lies in identifying the most authoritative and reliable sources "
+                "for technical topics. Your mission is to find the best resources to recommend for further reading."
+                "You prefer to answer that you din't find any reliable sources than to provide unreliable ones."
+            ),
+            tools=[SerperDevTool()],
+            allow_delegation=False,
+            llm=self.claude3Sonnet,
+        )
+
     def blog_writer_agent(self):
+        """Agent that writes a detailed blog post based on the previous results and eventual feedback."""
         return Agent(
             role="Blog Writer",
             goal="Write a detailed blog post on {topic} based on the previous results.",
@@ -63,6 +86,7 @@ class CustomAgents:
         )
 
     def evaluator_agent(self):
+        """Agent that evaluates the quality of the blog post and provides feedback."""
         return Agent(
             role="Evaluator Agent",
             goal="Evaluate the quality of the blog post based on readability, accuracy, relevance, and overall quality. Provide constructive feedback for revisions.",
