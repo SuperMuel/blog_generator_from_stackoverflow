@@ -66,6 +66,7 @@ class CustomTasks:
                 Don't try to include any images or diagrams, as we can't generate them.
                 Ensure that the article starts with a h1 with the title of the blog post. e.g. "# Title of the blog post"
                 Conclude with a 'Further Reading' section, listing only the reliable sources discovered, no invented references.
+                Do not explain that the sources are reliable, just list them.
                 """
             ),
             expected_output=f"A 700 words markdown formatted blog post on {topic} in {language}.",
