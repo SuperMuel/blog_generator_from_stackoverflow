@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-from crew.crew import generate_article
+from crew import generate_article
 import requests
 import threading
 import os

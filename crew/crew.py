@@ -1,6 +1,6 @@
 from crewai import Crew, Process
-from crew.agents import CustomAgents
-from crew.tasks import CustomTasks
+from .agents import CustomAgents
+from .tasks import CustomTasks
 from dotenv import load_dotenv
 
 
