@@ -61,7 +61,7 @@ class CustomTasks:
                 Ensure that the feedback is constructive and actionable.
                 Don't suggest to add diagrams or images, as we can't generate them. 
                 Don't suggest to add references, as this task will be handled separately.
-                """
+                """  # TODO: Ensure that the code blocks written can run without any errors, or that explanations are provided for any errors that may occur. For instance, imports should be correct, or functions and variables not defined should be explained.
             ),
             expected_output="A detailed feedback report.",
             agent=agent,

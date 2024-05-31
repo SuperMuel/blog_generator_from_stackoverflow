@@ -48,7 +48,6 @@ if __name__ == "__main__":
     print(article)
 
 
-# TODO: Ensure that the code blocks written can run without any errors, or that explanations are provided for any errors that may occur. For instance, imports should be correct, or functions and variables not defined should be explained.
 # find subjects in the generated blog post that would benefit from a clarification. For instance, if the term "microtask" occurs in a blog on a javascript subject, it should be explained in a way that a beginner can understand, or removed and replaced with simpler terms.
 # TODO : SEO optimization
 # Add context, so that it doesn't write "Bienvenue sur ce blog dédié au développement Python ! "
