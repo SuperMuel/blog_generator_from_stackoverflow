@@ -4,3 +4,4 @@ langchain-anthropic
 python-dotenv
 flask
 gunicorn
+agentops

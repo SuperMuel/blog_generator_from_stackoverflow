@@ -1,7 +1,9 @@
 from dotenv import load_dotenv
 from crew import generate_article
+import agentops
 
-if __name__ == "__main__":
+
+def main():
     load_dotenv()
 
     # Define your topic and language
@@ -13,6 +15,22 @@ if __name__ == "__main__":
     if not topic:
         topic = DEFAULT_TOPIC
 
-    article = generate_article(topic=topic, language=LANGUAGE)
+    agentops.init()
 
-    print(article)
+    try:
+        article = generate_article(topic=topic, language=LANGUAGE)
+        print(article)
+    # except ctrl+c
+    except KeyboardInterrupt:
+        agentops.end_session("Fail", end_state_reason="User Interrupted")
+        return
+    except Exception as e:
+        print(f"Error generating article: {e}")
+        agentops.end_session("Fail", end_state_reason=str(e))
+        return
+
+    agentops.end_session("Success")
+
+
+if __name__ == "__main__":
+    main()
