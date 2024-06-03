@@ -1,5 +1,4 @@
 from crewai import Agent
-from langchain_anthropic import ChatAnthropic
 from crew.tools import SearchStackOverflowTool, StackOverflowAnswerTool
 from crewai_tools import SerperDevTool
 
@@ -7,12 +6,12 @@ from crewai_tools import SerperDevTool
 class CustomAgents:
     """Custom agents for the crew."""
 
-    def __init__(self):
-        self.claude3Sonnet = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)  # type: ignore
+    def __init__(self, default_llm):
+        self.default_llm = default_llm
         self.search_stackoverflow_tool = SearchStackOverflowTool()  # type: ignore
         self.get_stackoverflow_answer = StackOverflowAnswerTool()
 
-    def stackoverflow_search_agent(self):
+    def stackoverflow_search_agent(self, llm=None):
         """Agent that searches Stack Overflow for relevant posts related to a topic."""
         return Agent(
             role="Search Agent",
@@ -25,11 +24,12 @@ class CustomAgents:
             ),
             tools=[self.search_stackoverflow_tool],
             allow_delegation=False,
-            llm=self.claude3Sonnet,
+            llm=self.default_llm if llm is None else llm,
         )
 
     def stackoverflow_report_agent(
         self,
+        llm=None,
     ):  # TODO : this do not take into account the question but only the answers. It should be improved, as questions can provide valuable information on the difficulty of the topic.
         """Agent that creates a detailed technical report from Stack Overflow answers."""
         return Agent(
@@ -44,10 +44,10 @@ class CustomAgents:
             ),
             tools=[self.get_stackoverflow_answer],
             allow_delegation=False,
-            llm=self.claude3Sonnet,
+            llm=self.default_llm if llm is None else llm,
         )
 
-    def reliable_sources_agent(self):
+    def reliable_sources_agent(self, llm=None):
         """Agent that finds reliable sources related to a topic for further reading."""
         return Agent(
             role="Reliable Sources Agent",
@@ -62,10 +62,10 @@ class CustomAgents:
             ),
             tools=[SerperDevTool()],
             allow_delegation=False,
-            llm=self.claude3Sonnet,
+            llm=self.default_llm if llm is None else llm,
         )
 
-    def blog_writer_agent(self):
+    def blog_writer_agent(self, llm=None):
         """Agent that writes a detailed blog post based on the previous results and eventual feedback."""
         return Agent(
             role="Blog Writer",
@@ -83,10 +83,10 @@ class CustomAgents:
             ),
             tools=[],
             allow_delegation=False,
-            llm=self.claude3Sonnet,
+            llm=self.default_llm if llm is None else llm,
         )
 
-    def evaluator_agent(self):
+    def evaluator_agent(self, llm=None):
         """Agent that evaluates the quality of the blog post and provides feedback."""
         return Agent(
             role="Evaluator Agent",
@@ -98,5 +98,5 @@ class CustomAgents:
             ),
             tools=[],
             allow_delegation=False,
-            llm=self.claude3Sonnet,
+            llm=self.default_llm if llm is None else llm,
         )

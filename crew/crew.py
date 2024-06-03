@@ -2,11 +2,16 @@ from crewai import Crew, Process
 from .agents import CustomAgents
 from .tasks import CustomTasks
 
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+
 
 def generate_article(topic: str, language: str = "FR") -> str:
+    claude3_sonnet = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)  # type: ignore
+    gpt4o = ChatOpenAI(model_name="gpt-4o", max_tokens=4096)  # type: ignore
 
     # Initialize custom agents and tasks
-    agents = CustomAgents()
+    agents = CustomAgents(default_llm=gpt4o)
     tasks = CustomTasks()
 
     # Create agents
