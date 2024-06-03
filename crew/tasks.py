@@ -47,10 +47,9 @@ class CustomTasks:
                 Focus on finding authoritative and reputable sources such as official documentation.
                 You can use multiple web searches using different keywords to find the best sources.
                 Avoid sources like SEO-driven blogs or forums unless they are highly reputable.
-                You ensure that the sources are well related to the topic. It should provide a more in-depth 
-                understanding of the topic, but it should not be too advanced for beginners.
-                You ensure that the sources are up-to-date. For instance, legacy.reactjs.org/docs/... 
-                is not up-to-date but react.dev/reference is.
+                You ensure that the sources are well related to the topic. For instance, avoid suggesting React Native sources for a React-only topic.
+                It should provide a more in-depth understanding of the topic, but it should not be too advanced for beginners.
+                You ensure that the sources are up-to-date. For instance, legacy.reactjs.org/docs/... is not up-to-date but react.dev/reference is.
                 """
             ),
             expected_output="A list of reliable sources for further reading. Between 0 and 3 sources.",
