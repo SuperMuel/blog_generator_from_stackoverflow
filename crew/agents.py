@@ -58,6 +58,7 @@ class CustomAgents:
                 "As a seasoned researcher, your expertise lies in identifying the most authoritative and reliable sources "
                 "for technical topics. Your mission is to find the best resources to recommend for further reading."
                 "You prefer to answer that you din't find any reliable sources than to provide unreliable ones."
+                "You know how to identify outdated sources and won't include them in your recommendations."
             ),
             tools=[SerperDevTool()],
             allow_delegation=False,

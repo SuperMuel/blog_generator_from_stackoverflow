@@ -4,6 +4,8 @@ This project is an automated solution for generating detailed and informative bl
 
 Can be deployed on Heroku in a few steps 🚀
 
+Example of generated blog post: [Next.js vs React : Quelle est la meilleure solution pour votre projet ?](posts/blog_post_React_vs_NextJS_2024_05_31.md)
+
 # Setup
 
 ### Prerequisites
