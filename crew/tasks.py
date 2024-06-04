@@ -61,7 +61,7 @@ class CustomTasks:
         return Task(
             description=dedent(
                 f"""
-                Write a comprehensive blog post on {topic} based on the summaries of the selected Stack Overflow answers. 
+                Write a comprehensive blog post on "{topic}" based on the summaries of the selected Stack Overflow answers. 
                 Ensure the article is informative, engaging, and formatted in markdown. 
                 The blog post is targeted towards beginners. 
                 Examples are better than theory, so include code snippets and practical examples. 
@@ -72,7 +72,7 @@ class CustomTasks:
                 Do not explain that the sources are reliable, just list them.
                 """
             ),
-            expected_output=f"A 700 words markdown formatted blog post on {topic} in {language}.",
+            expected_output=f'A 700 words markdown formatted blog post on "{topic}" in {language}.',
             agent=agent,
             context=context_tasks,
             # TODO Add context, so that it doesn't write "Bienvenue sur ce blog dédié au développement Python ! "
@@ -109,7 +109,7 @@ class CustomTasks:
                 Ensure that the article starts with a h1 with the title of the blog post. e.g. "# Title of the blog post"
                 """
             ),
-            expected_output=f"A revised markdown formatted blog post on {topic} in {language}.",
+            expected_output=f'A revised markdown formatted blog post on "{topic}" in {language}.',
             agent=agent,
             context=context_tasks,
         )  # TODO find subjects in the generated blog post that would benefit from a clarification. For instance, if the term "microtask" occurs in a blog on a javascript subject, it should be explained in a way that a beginner can understand, or removed and replaced with simpler terms.

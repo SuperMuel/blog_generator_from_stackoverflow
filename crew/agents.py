@@ -15,7 +15,7 @@ class CustomAgents:
         """Agent that searches Stack Overflow for relevant posts related to a topic."""
         return Agent(
             role="Search Agent",
-            goal="Find relevant Stack Overflow posts related to {topic}",
+            goal='Find relevant Stack Overflow posts related to "{topic}"',
             verbose=True,
             memory=True,
             backstory=(
@@ -34,7 +34,7 @@ class CustomAgents:
         """Agent that creates a detailed technical report from Stack Overflow answers."""
         return Agent(
             role="Report Agent",
-            goal="Create a detailed technical report from Stack Overflow answers for {topic}",
+            goal='Create a detailed technical report from Stack Overflow answers for "{topic}"',
             verbose=True,
             memory=True,
             backstory=(
@@ -51,7 +51,7 @@ class CustomAgents:
         """Agent that finds reliable sources related to a topic for further reading."""
         return Agent(
             role="Reliable Sources Agent",
-            goal="Find reliable sources related to {topic} for further reading",
+            goal='Find reliable sources related to "{topic}" for further reading',
             verbose=True,
             memory=True,
             backstory=(
@@ -69,7 +69,7 @@ class CustomAgents:
         """Agent that writes a detailed blog post based on the previous results and eventual feedback."""
         return Agent(
             role="Blog Writer",
-            goal="Write a detailed blog post on {topic} based on the previous results.",
+            goal='Write a detailed blog post on "{topic}" based on the previous results.',
             verbose=True,
             memory=True,
             backstory=(

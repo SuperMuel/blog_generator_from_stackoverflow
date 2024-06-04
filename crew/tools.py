@@ -15,7 +15,7 @@ class SearchStackOverflowToolSchema(BaseModel):
 
 
 class SearchStackOverflowTool(BaseTool):
-    name: str = "Search Stack Overflow"
+    name: str = "Search Stack Overflow"  # TODO : Spaces allowed ?
     description: str = (
         "Searches Stack Overflow for relevant posts based on the provided query."
     )
@@ -87,7 +87,7 @@ class StackOverflowAnswerToolSchema(BaseModel):
 class StackOverflowAnswerTool(
     BaseTool
 ):  # TODO: also check https://python.langchain.com/v0.1/docs/integrations/tools/stackexchange/
-    name: str = "Get answer from Stack Overflow"
+    name: str = "Get answer from Stack Overflow"  # TODO ? Spaces allowed ?
     description: str = "Gets the answer from Stack Overflow for a given answer ID."
     args_schema: Type[BaseModel] = StackOverflowAnswerToolSchema
 
