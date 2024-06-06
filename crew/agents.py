@@ -1,6 +1,6 @@
 from crewai import Agent
-from crew.tools import SearchStackOverflowTool, StackOverflowAnswerTool
 from crewai_tools import SerperDevTool
+from crew.tools import SearchStackOverflowTool, StackOverflowAnswerTool
 
 
 class CustomAgents:
@@ -94,7 +94,25 @@ class CustomAgents:
             verbose=True,
             memory=True,
             backstory=(
-                "As an experienced editor, you excel at evaluating technical content and providing constructive feedback to enhance readability, accuracy, and overall quality."
+                "As an experienced editor, you excel at evaluating technical content and providing constructive feedback to enhance readability, accuracy, and overall quality. "
+                "You are a native speaker of {language} and you provide feedback in this language. "
+            ),
+            tools=[],
+            allow_delegation=False,
+            llm=self.default_llm if llm is None else llm,
+        )
+
+    def internal_linking_agent(self, llm=None):
+        """Agent that links existing articles within the new article."""
+        return Agent(
+            role="Linking Agent",
+            goal='Add relevant links to existing articles within the new article "{topic}".',
+            verbose=True,
+            memory=True,
+            backstory=(
+                "As an expert in creating interconnected content, you will identify opportunities to link to other relevant articles "
+                "to enhance the new article. Your goal is to find meaningful connections and improve the reader's experience by providing "
+                "additional resources. You understand that it's better to leave the article without links than to include irrelevant ones."
             ),
             tools=[],
             allow_delegation=False,

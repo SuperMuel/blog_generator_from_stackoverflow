@@ -5,3 +5,5 @@ python-dotenv
 flask
 gunicorn
 agentops
+pathvalidate
+langsmith

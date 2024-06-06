@@ -7,15 +7,16 @@ from json import loads, dumps
 from datetime import datetime
 import os
 
+#TODO : put this in a module and test it
 
 class SearchStackOverflowToolSchema(BaseModel):
-    """Input for SearchStackOverflowTool."""
+    """Input for SearchStackOverflow tool."""
 
     query: str = Field(..., description="Mandatory search query to search for.")
 
 
 class SearchStackOverflowTool(BaseTool):
-    name: str = "Search Stack Overflow"  # TODO : Spaces allowed ?
+    name: str = "SearchStackOverflow"
     description: str = (
         "Searches Stack Overflow for relevant posts based on the provided query."
     )
@@ -68,7 +69,7 @@ class SearchStackOverflowTool(BaseTool):
             "POST", self.search_url, headers=headers, data=payload
         )
         results = response.json()
-        if not "organic" in results:
+        if "organic" not in results:
             raise NotImplementedError("No organic search results found.")
 
         results = results["organic"]
@@ -79,7 +80,7 @@ class SearchStackOverflowTool(BaseTool):
 
 
 class StackOverflowAnswerToolSchema(BaseModel):
-    """Input for StackOverflowAnswerTool."""
+    """Input for GetAnswerFromStackOverflow tool."""
 
     answer_id: str = Field(..., description="Mandatory answer ID to search for.")
 
@@ -87,7 +88,7 @@ class StackOverflowAnswerToolSchema(BaseModel):
 class StackOverflowAnswerTool(
     BaseTool
 ):  # TODO: also check https://python.langchain.com/v0.1/docs/integrations/tools/stackexchange/
-    name: str = "Get answer from Stack Overflow"  # TODO ? Spaces allowed ?
+    name: str = "GetAnswerFromStackOverflow"
     description: str = "Gets the answer from Stack Overflow for a given answer ID."
     args_schema: Type[BaseModel] = StackOverflowAnswerToolSchema
 
@@ -122,7 +123,7 @@ class StackOverflowAnswerTool(
         #  "link":"https://stackoverflow.com/questions/120001/load-excel-data-sheet-to-oracle-database/123456#123456",
         #  "title":"Load Excel data sheet to Oracle database"
 
-        # Extract the answer content
+        # Extract the answer content #TODO : extract method
         answer = item.get("body_markdown")
         title = item.get("title")
         link = item.get("link")
@@ -150,6 +151,7 @@ class StackOverflowAnswerTool(
         return text
 
 
+# Test the tools
 if __name__ == "__main__":
     tool = StackOverflowAnswerTool()
     print(tool.run(answer_id="30810322"))

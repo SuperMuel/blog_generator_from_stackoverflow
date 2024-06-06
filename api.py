@@ -41,6 +41,8 @@ def generate_article_and_callback(topic, language, callback_url, custom_args):
         )
 
 
+# TODO : add `base_blog_url` argument. Or think about a way for the client to give the base url in natural language
+# For instance, "The articles of my bloc "
 @app.route("/generate-article", methods=["POST"])
 def generate_article_endpoint():
     data = request.json

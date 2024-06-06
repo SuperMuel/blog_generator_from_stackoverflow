@@ -14,6 +14,7 @@ class CustomTasks:
                 The url of an answer is in the format 'https://stackoverflow.com/a/<answer_id>'.
                 Even if the topic is in a foreign language, you try to find the best answers from English posts because 
                 it's the most common language for programming. You don't need to translate your results.
+                For Python topics, don't select answers that you know use python 2 because it's outdated. If you don't know, it's better to select it if the answer seems relevant.
                 """
             ),
             expected_output="A list of URLs of the best answers for each selected Stack Overflow post.",
@@ -40,6 +41,7 @@ class CustomTasks:
     def find_reliable_sources_task(self, agent, topic):
         """Task to find reliable sources related to a topic for further reading."""
         # TODO : except stackoverflow
+        # TODO : instruct to use `site:` syntax to search on specific reliable websites
         return Task(
             description=dedent(
                 f"""
@@ -50,6 +52,12 @@ class CustomTasks:
                 You ensure that the sources are well related to the topic. For instance, avoid suggesting React Native sources for a React-only topic.
                 It should provide a more in-depth understanding of the topic, but it should not be too advanced for beginners.
                 You ensure that the sources are up-to-date. For instance, legacy.reactjs.org/docs/... is not up-to-date but react.dev/reference is.
+
+                When selecting the best sources, explain why you consider them reliable and useful for further reading. 
+                For the second and each new source, explain why it is different from the previous one and not redundant. 
+                If it is redundant, don't include it in the list and prefer to keep your list small.
+
+                Even if the topic is in a foreign language, you prefer to do web searches with an english query because it's the most common language for programming. You don't need to translate your results.
                 """
             ),
             expected_output="A list of reliable sources for further reading. Between 0 and 3 sources.",
@@ -69,7 +77,7 @@ class CustomTasks:
                 Don't try to include any images or diagrams, as we can't generate them.
                 Ensure that the article starts with a h1 with the title of the blog post. e.g. "# Title of the blog post"
                 Conclude with a 'Further Reading' section, listing only the reliable sources discovered, no invented references.
-                Do not explain that the sources are reliable, just list them.
+                Do not explain that the sources are reliable, just list them using the markdown link format.
                 """
             ),
             expected_output=f'A 700 words markdown formatted blog post on "{topic}" in {language}.',
@@ -90,6 +98,8 @@ class CustomTasks:
                 Verify that the content of the article is closely related and relevant to the assigned topic.
                 Ensure that the feedback is constructive and actionable.
                 Do not suggest to add diagrams or images, as we can't generate them.
+                Do not suggest to change the sources or add new ones, as the sources are already validated. Do not talk about sources. 
+                Answer in the {language} language, while of course using English to structure your answer as instructed.
                 """  # TODO: Ensure that the code blocks written can run without any errors, or that explanations are provided for any errors that may occur. For instance, imports should be correct, or functions and variables not defined should be explained.
             ),
             # TODO : give the websiteExistsTool to check if the sources are still available.
@@ -106,6 +116,7 @@ class CustomTasks:
                 Read the blog post written and the subsequent evaluation feedback. Make necessary revisions based on the feedback provided. 
                 Ensure that all suggested improvements are implemented and that the blog post is polished and ready for publication.
                 Don't try to include any images or diagrams, as we can't generate them.
+                Do not change the sources or add new ones, as the sources are already validated.
                 Ensure that the article starts with a h1 with the title of the blog post. e.g. "# Title of the blog post"
                 """
             ),
@@ -113,3 +124,52 @@ class CustomTasks:
             agent=agent,
             context=context_tasks,
         )  # TODO find subjects in the generated blog post that would benefit from a clarification. For instance, if the term "microtask" occurs in a blog on a javascript subject, it should be explained in a way that a beginner can understand, or removed and replaced with simpler terms.
+
+    def link_existing_articles_task(self, agent, existing_articles: List[dict]):
+        """Task to add links to existing articles within the new article."""
+
+        assert len(existing_articles) > 0, "At least one existing article is required."
+
+        articles_list = "\n".join(
+            [
+                f"- [**{article['title']}**]({article['url']}){f' - {article['summary']}' if 'summary' in article else ''}"
+                for article in existing_articles
+            ]
+        )
+
+        return Task(
+            description=dedent(
+                f"""Review the new article and identify opportunities to add links to existing articles of the blog to enhance its content and provide additional resources for the readers.
+
+            The goal is to add a maximum of 3 highly relevant links within the body of the new article. These links should enhance the content and provide significant additional value to the readers.
+            Ensure that the relationship between the new article and the linked articles is clear and contextually relevant. Only add a link if it is highly relevant to the topic being discussed.
+
+            Guidelines for linking:
+            - Place the links in areas of the article where they naturally fit and add value to the content. Avoid placing links in the introduction, conclusion, or at the very end of the article.
+            - Ensure the links are not inserted in the middle of code snippets or in any way that disrupts the flow of the article.
+            - Each link should be highly relevant to the topic being discussed in the paragraph and should seamlessly integrate into the content.
+
+            Example of how to mention the link:
+            "For more details on this topic, see our article on [**<article>**](<article url>)."
+
+            If no highly relevant links can be found, just give back the original article without any changes.
+
+            The blog has the following articles that can be linked to:
+            <articles_list>
+
+            {articles_list}
+
+            </articles_list>
+
+            Before you proceed, list the articles you plan to link to and their positions in the new article, along with a short explanation of why each link is highly relevant in the context of the new article.
+
+            When you finish, provide the revised article with the added links. If no changes were made, return the original article.
+            """
+            ),
+            agent=agent,
+            expected_output="A revised article with highly relevant links to existing articles, or the original article if no highly relevant links were found.",
+            # TODO : instruct to introduce the link with a sentence that makes sense in the context of the new article.
+            #!"For more details on this topic, see our article on [**<article>**](<article url>)."  :this example is always used too stricly. It should be adapted to the context of the new article.
+            # TODO : do not assume that the article talk about somethink if it's not specified in the article summary.
+            # TODO : it once confused our articles with the reliable sources. Add instructions : "Do not mix up the external sources that are already at the end of the article, with our own articles of {blog_base_url}"
+        )
