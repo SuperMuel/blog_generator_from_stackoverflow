@@ -32,12 +32,7 @@ You need an Anthropic API key to generate blog posts. You can get one by signing
 
 To search for StackOverflow posts, you need a Serper.dev API key. You can get one by signing up at [Serper.dev](https://serper.dev/).
 
-Once you have the API keys, copy the `.env.example` file to `.env` and add your API keys:
-
-```env
-ANTHROPIC_API_KEY="Your Anthropic API"
-SERPER_API_KEY="Your Serper api"
-```
+Once you have the API keys, copy the `.env.example` file to `.env` and add the API keys for the services you wish to use.
 
 # Run the application
 
