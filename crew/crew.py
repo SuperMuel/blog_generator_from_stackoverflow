@@ -14,6 +14,21 @@ def generate_article(
     language: str = "FR",
     existing_articles: List[Dict] | None = None,
 ) -> str:
+    """Kickoff the crew to generate an article based on the given topic and language.
+
+    Args:
+        topic : The topic for the article.
+        language : The language of the article. Defaults to "FR". Can be any language supported by the model. Format not specified : "FR" / "French" / "Français" ... all work.
+        existing_articles : Existing articles to link to. Defaults to None.
+
+    """
+
+    if not topic:
+        raise ValueError("Empty topic")
+
+    if not language:
+        raise ValueError("Empty language")
+
     # claude3_haiku = ChatAnthropic(model_name="claude-3-haiku-20240307", max_tokens=4096)  # type: ignore
 
     claude3_sonnet = ChatAnthropic(

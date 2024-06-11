@@ -8,3 +8,4 @@ pathvalidate
 langsmith
 fastapi
 pydantic
+streamlit
