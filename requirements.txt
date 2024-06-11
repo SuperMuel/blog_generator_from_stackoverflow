@@ -2,8 +2,9 @@ crewai
 crewai[tools]
 langchain-anthropic
 python-dotenv
-flask
 gunicorn
 agentops
 pathvalidate
 langsmith
+fastapi
+pydantic

@@ -45,21 +45,15 @@ python generate_article "Your topic"
 
 ## Locally
 
-1. **Start the Flask application**:
+1. **Start the Fastapi application**:
 
    ```sh
-   python api.py
+   fastapi dev api/api.py
    ```
 
 2. **Test the API**:
 
-   You can test the endpoint using `curl` or Postman:
-
-   ```sh
-   curl -X POST http://127.0.0.1:5000/generate-article \
-       -H "Content-Type: application/json" \
-       -d '{"topic": "La programmation asynchrone en Python", "language": "French", "callback_url": "http://your-callback-url"}'
-   ```
+You can access the interactive API documentation at `http://localhost:5000/docs` and test the `/generate-article` endpoint.
 
 ## On Heroku
 
@@ -84,7 +78,7 @@ heroku create your-app-name
 3. Set the environment variables on Heroku:
 
 ```sh
-python setup_heroku.py
+python api/scripts/heroku_setup_env.py
 ```
 
 4. **Deploy the application**:
