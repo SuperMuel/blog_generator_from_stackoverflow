@@ -1,6 +1,7 @@
 # StackBlog: StackOverflow Blog Generator
 
-This project is an automated solution for generating detailed and informative blog posts based on Stack Overflow discussions. Using CrewAI and multiple AI agents, it extracts relevant information from Stack Overflow, compiles it into comprehensive reports, and formats it into engaging blog posts.
+This project is an automated solution for generating detailed and informative blog posts based on Stack Overflow discussions. Using CrewAI and multiple AI agents, it
+searches for relevant Stack Overflow posts, extracts the most important information, and compiles it into a comprehensive and engaging blog post.
 
 Can be deployed on Heroku in a few steps 🚀
 
@@ -34,7 +35,13 @@ To search for StackOverflow posts, you need a Serper.dev API key. You can get on
 
 Once you have the API keys, copy the `.env.example` file to `.env` and add the API keys for the services you wish to use.
 
-# Run the application
+# Run locally
+
+```sh
+python generate_article "Your topic"
+```
+
+# Run the API Server
 
 ## Locally
 
@@ -100,9 +107,9 @@ heroku ps:scale web=1
 heroku open
 ```
 
-# API Endpoints
+## API Endpoints
 
-## Generate Article
+### Generate Article
 
 - **Endpoint**: `/generate-article`
 - **Method**: `POST`
@@ -160,3 +167,5 @@ Once the article is generated, the server will send a POST request to the provid
     }
   }
   ```
+
+//TODO : Use fastAPI and generate documentation
