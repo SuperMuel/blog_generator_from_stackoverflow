@@ -130,12 +130,13 @@ class CustomTasks:
 
         assert len(existing_articles) > 0, "At least one existing article is required."
 
-        articles_list = "\n".join(
-            [
-                f"- [**{article['title']}**]({article['url']}){f' - {article['summary']}' if 'summary' in article else ''}"
-                for article in existing_articles
-            ]
-        )
+        def format_article(article):
+            markdown_link = f"[**{article['title']}**]({article['url']})"
+            summary = f" - {article['summary']}" if "summary" in article else ""
+
+            return f"- {markdown_link}{summary}"
+
+        articles_list = "\n".join(map(format_article, existing_articles))
 
         return Task(
             description=dedent(
