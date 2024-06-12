@@ -15,6 +15,8 @@ if st.button("Generate Article"):
 
     with st.spinner("Generating article..."):
         article = generate_article(topic, language)
+        if not article:
+            st.error("An error occurred while generating the article.")
 
     end_time = time.time()
     stopwatch_placeholder.text(
