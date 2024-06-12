@@ -47,8 +47,14 @@ with st.sidebar:
             ],
             index=0,
         )
+        context = st.text_area(
+            "Contexte (optionnel) :",
+            placeholder="Example.com est une entreprise aux services du numérique implantée dans Lyon.",
+            disabled=True,  # Not supported yet
+            height=100,
+        )
 
-        submitted = st.form_submit_button("Générer")
+        submitted = st.form_submit_button(":sparkles: Générer")
 
 
 if submitted:
