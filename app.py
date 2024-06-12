@@ -102,6 +102,13 @@ with st.sidebar:
             height=100,
         )
 
+        # l'url de votre blog (optionnel)
+        blog_url = st.text_input(
+            "URL de votre blog (optionnel) :",
+            placeholder="https://example.com/blog",
+            disabled=True,  # Not supported yet
+        )
+
         model = st.selectbox(
             "Choisissez le modèle d'IA :",
             options=AIModel.__members__.values(),
@@ -137,3 +144,15 @@ if submitted:
 
     if result:
         st.markdown(result)
+
+else:  # if not submitted
+    st.markdown(
+        """
+        ## 📝 Instructions
+        1. Entrez le sujet de l'article.
+        2. Choisissez la langue.
+        3. (Optionnel) Ajoutez un contexte afin que les agents comprennent mieux votre besoin.
+        4. (Optionnel) Ajoutez l'URL de votre blog, afin que les agents trouvent vos anciens articles et les lient.
+        5. Cliquez sur **:sparkles: Générer**.
+        """
+    )
