@@ -38,13 +38,14 @@ class CustomTasks:
             agent=agent,
         )
 
-    def find_reliable_sources_task(self, agent, topic):
+    def find_reliable_sources_task(self, agent):
         """Task to find reliable sources related to a topic for further reading."""
         # TODO : except stackoverflow
         # TODO : instruct to use `site:` syntax to search on specific reliable websites
+        # TODO : why does it always make a single search ? Check the instructions. Or maybe instruct to use the | operator to combine multiple searches.
         return Task(
             description=dedent(
-                f"""
+                """
                 Use the SerperDev tool to search for reliable sources related to '{topic}'.
                 Focus on finding authoritative and reputable sources such as official documentation.
                 You can use multiple web searches using different keywords to find the best sources.
@@ -64,11 +65,11 @@ class CustomTasks:
             agent=agent,
         )
 
-    def write_task(self, agent, topic, language, context_tasks: List[Task]):
+    def write_task(self, agent, context_tasks: List[Task]):
         """Task to write a detailed blog post based on the previous results."""
         return Task(
             description=dedent(
-                f"""
+                """
                 Write a comprehensive blog post on "{topic}" based on the summaries of the selected Stack Overflow answers. 
                 Ensure the article is informative, engaging, and formatted in markdown. 
                 The blog post is targeted towards beginners. 
@@ -80,7 +81,7 @@ class CustomTasks:
                 Do not explain that the sources are reliable, just list them using the markdown link format.
                 """
             ),
-            expected_output=f'A 700 words markdown formatted blog post on "{topic}" in {language}.',
+            expected_output='A 700 words markdown formatted blog post on "{topic}" in {language}.',
             agent=agent,
             context=context_tasks,
             # TODO Add context, so that it doesn't write "Bienvenue sur ce blog dédié au développement Python ! "
@@ -108,7 +109,7 @@ class CustomTasks:
             context=context_tasks,
         )  # TODO : sometimes, suggested improvements are pertinent, but would require web searches. We would benefit from an agent that would take the suggestions and decide if web searches are necessary.
 
-    def revision_task(self, agent, context_tasks: List[Task], topic, language):
+    def revision_task(self, agent, context_tasks: List[Task]):
         """Task to revise the blog post based on the evaluation feedback."""
         return Task(
             description=dedent(
@@ -120,7 +121,7 @@ class CustomTasks:
                 Ensure that the article starts with a h1 with the title of the blog post. e.g. "# Title of the blog post"
                 """
             ),
-            expected_output=f'A revised markdown formatted blog post on "{topic}" in {language}.',
+            expected_output='A revised markdown formatted blog post on "{topic}" in {language}.',
             agent=agent,
             context=context_tasks,
         )  # TODO find subjects in the generated blog post that would benefit from a clarification. For instance, if the term "microtask" occurs in a blog on a javascript subject, it should be explained in a way that a beginner can understand, or removed and replaced with simpler terms.
@@ -130,13 +131,13 @@ class CustomTasks:
 
         assert len(existing_articles) > 0, "At least one existing article is required."
 
-        def format_article(article):
+        def format_one_article(article):
             markdown_link = f"[**{article['title']}**]({article['url']})"
             summary = f" - {article['summary']}" if "summary" in article else ""
 
             return f"- {markdown_link}{summary}"
 
-        articles_list = "\n".join(map(format_article, existing_articles))
+        articles_list = "\n".join(map(format_one_article, existing_articles))
 
         return Task(
             description=dedent(

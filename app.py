@@ -1,26 +1,71 @@
-import time
+# Layout inspired by :
+# https://github.com/tonykipkemboi/trip_planner_agent/blob/main/streamlit_app.py
+
+
 import streamlit as st
 from crew import generate_article
 
-st.title("Article Generator")
-
-topic = st.text_input("Enter the topic:")
-language = st.selectbox(
-    "Select the language:", options=["Français", "Anglais"], index=0
+st.set_page_config(
+    page_icon="✏️",
+    layout="wide",
 )
 
-if st.button("Generate Article"):
-    stopwatch_placeholder = st.empty()
-    start_time = time.time()
 
-    with st.spinner("Generating article..."):
-        article = generate_article(topic, language)
-        if not article:
-            st.error("An error occurred while generating the article.")
-
-    end_time = time.time()
-    stopwatch_placeholder.text(
-        f"Article generated in {end_time - start_time:.2f} seconds"
+def icon(emoji: str):
+    """Shows an emoji as a Notion-style page icon."""
+    st.write(
+        f'<span style="font-size: 78px; line-height: 1">{emoji}</span>',
+        unsafe_allow_html=True,
     )
 
-    st.markdown(article)
+
+icon("✏️ Générateur d'articles")
+
+
+st.subheader(
+    "Les agents IA travaillent pour vous ✨",
+    divider=True,
+    anchor=False,
+)
+options = [
+    "Français",
+    "Anglais",
+    "Espagnol",
+    "Allemand",
+]
+with st.sidebar:
+    st.header("🔧 Paramètres")
+    with st.form(key="settings"):
+        topic = st.text_input("Entrez le sujet de l'article :")
+        language = st.selectbox(
+            "Choisissez la langue :",
+            options=[
+                "Français",
+                "Anglais",
+                "Espagnol",
+                "Allemand",
+            ],
+            index=0,
+        )
+
+        submitted = st.form_submit_button("Générer")
+
+
+if submitted:
+    with st.status(
+        "🤖 **Agents au travail... Cela peut prendre quelques    minutes...**",
+        state="running",
+        expanded=True,
+    ) as status:
+        with st.container(height=500, border=False):
+            try:
+                result = generate_article(topic, language)
+            except Exception as e:
+                st.error(f"Une erreur est survenue {e}")
+                status.update(label="❌ Une erreur est survenue !", state="error")
+                result = None
+        status.update(label="✅ Article rédigé !", state="complete", expanded=False)
+
+    if result:
+        st.subheader("Voilà votre article !", anchor=False, divider="rainbow")
+        st.markdown(result)

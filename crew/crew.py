@@ -51,33 +51,29 @@ def generate_article(
     internal_linking_agent = agents.internal_linking_agent()
 
     # Create tasks
-    search_task = tasks.search_stackoverflow_task(search_agent)
-    report_task = tasks.generate_stackoverflow_technical_report(report_agent)
+    search_task = tasks.search_stackoverflow_task(agent=search_agent)
+    report_task = tasks.generate_stackoverflow_technical_report(agent=report_agent)
     reliable_sources_task = tasks.find_reliable_sources_task(
-        reliable_sources_agent, topic
+        agent=reliable_sources_agent
     )
     write_task = tasks.write_task(
-        writer_agent,
-        topic,
-        language,
+        agent=writer_agent,
         context_tasks=[report_task, reliable_sources_task],
     )
     evaluation_task = tasks.evaluation_task(evaluator_agent, context_tasks=[write_task])
     revision_task = tasks.revision_task(
-        writer_agent,
-        [
+        agent=writer_agent,
+        context_tasks=[
             reliable_sources_task,
             write_task,
             evaluation_task,
         ],
-        topic,
-        language,
     )
 
     internal_linking_task = (
         tasks.link_existing_articles_task(
-            internal_linking_agent,
-            existing_articles,
+            agent=internal_linking_agent,
+            existing_articles=existing_articles,
         )
         if existing_articles is not None and len(existing_articles) > 0
         else None
@@ -104,12 +100,10 @@ def generate_article(
     if internal_linking_task is not None:
         tasks_list.append(internal_linking_task)
 
-    # Define your crew
     crew = Crew(
         agents=agents_list,
         tasks=tasks_list,
         process=Process.sequential,
     )
 
-    # Kickoff the crew
     return crew.kickoff(inputs={"topic": topic, "language": language})
