@@ -9,6 +9,8 @@ import crew
 import requests
 import logging
 
+from crew.ai_models import AIModel
+
 
 # Load environment variables
 load_dotenv()
@@ -22,7 +24,11 @@ logger = logging.getLogger(__name__)
 def generate_article_and_callback(topic, language, callback_url, custom_args) -> None:
     try:
         logger.info(f"Generating article for topic: {topic} in language: {language}")
-        article = crew.generate_article(topic=topic, language=language)
+        article = crew.generate_article(
+            llm=AIModel.CLAUDE_3_SONNET.to_client(),  # TODO : add choice
+            topic=topic,
+            language=language,
+        )
         response = requests.post(
             callback_url,
             json={

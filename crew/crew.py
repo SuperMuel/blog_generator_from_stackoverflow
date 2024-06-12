@@ -1,8 +1,8 @@
-from typing import Dict, List
-from crewai import Crew, Process, Task, Agent
-from langchain_anthropic import ChatAnthropic
-from langsmith import traceable
+from typing import Callable, Dict, List
 
+from crewai import Agent, Crew, Process, Task
+from langsmith import traceable
+from langchain_core.language_models.chat_models import BaseChatModel
 
 from .agents import CustomAgents
 from .tasks import CustomTasks
@@ -10,17 +10,20 @@ from .tasks import CustomTasks
 
 @traceable
 def generate_article(
+    llm: BaseChatModel,
     topic: str,
     language: str = "FR",
     existing_articles: List[Dict] | None = None,
+    global_step_callback: Callable | None = None,
 ) -> str:
     """Kickoff the crew to generate an article based on the given topic and language.
 
     Args:
+        llm : The language model to be used for generating the article.
         topic : The topic for the article.
         language : The language of the article. Defaults to "FR". Can be any language supported by the model. Format not specified : "FR" / "French" / "Français" ... all work.
         existing_articles : Existing articles to link to. Defaults to None.
-
+        global_step_callback : Callback to be executed after each step for every agents execution.
     """
 
     if not topic:
@@ -29,17 +32,8 @@ def generate_article(
     if not language:
         raise ValueError("Empty language")
 
-    # claude3_haiku = ChatAnthropic(model_name="claude-3-haiku-20240307", max_tokens=4096)  # type: ignore
-
-    claude3_sonnet = ChatAnthropic(
-        model_name="claude-3-sonnet-20240229",
-        max_tokens=4096,  # type: ignore
-    )
-
-    # gpt4o = ChatOpenAI(model_name="gpt-4o", max_tokens=4096)  # type: ignore
-
     # Initialize custom agents and tasks
-    agents = CustomAgents(default_llm=claude3_sonnet)
+    agents = CustomAgents(default_llm=llm)
     tasks = CustomTasks()
 
     # Create agents
@@ -104,6 +98,7 @@ def generate_article(
         agents=agents_list,
         tasks=tasks_list,
         process=Process.sequential,
+        step_callback=global_step_callback,
     )
 
     return crew.kickoff(inputs={"topic": topic, "language": language})

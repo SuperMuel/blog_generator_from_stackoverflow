@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from pathvalidate import sanitize_filename
 
 from crew import generate_article
+from crew.ai_models import AIModel
 
 EXISTING_ARTICLES = [
     {
@@ -70,6 +71,7 @@ def get_arguments():
         default="French",
         help="The language of the article (default: French).",
     )
+    # TODO : add ai model choice
     return parser.parse_args()
 
 
@@ -100,8 +102,11 @@ def main():
 
     agentops.init()
 
+    llm = AIModel.CLAUDE_3_SONNET.to_client()
+
     try:
         article = generate_article(
+            llm=llm,
             topic=args.topic,
             language=args.language,
             existing_articles=EXISTING_ARTICLES,
