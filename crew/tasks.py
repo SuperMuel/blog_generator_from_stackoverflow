@@ -148,12 +148,12 @@ class CustomTasks:
             Ensure that the relationship between the new article and the linked articles is clear and contextually relevant. Only add a link if it is highly relevant to the topic being discussed.
 
             Guidelines for linking:
-            - Place the links in areas of the article where they naturally fit and add value to the content. Avoid placing links in the introduction, conclusion, or at the very end of the article.
+            - Place the links in areas of the article where they naturally fit and add value to the content.
             - Ensure the links are not inserted in the middle of code snippets or in any way that disrupts the flow of the article.
+            - Don't add links to the same article more than once.
+            - Don't put multiple links in the same paragraph. Spread them out across the article.
+            - Do not assume that the article talks about something if it's not specified in the article summary. It's better to not link than to make an assumption.
             - Each link should be highly relevant to the topic being discussed in the paragraph and should seamlessly integrate into the content.
-
-            Example of how to mention the link:
-            "For more details on this topic, see our article on [**<article>**](<article url>)."
 
             If no highly relevant links can be found, just give back the original article without any changes.
 
@@ -172,7 +172,5 @@ class CustomTasks:
             agent=agent,
             expected_output="A revised article with highly relevant links to existing articles, or the original article if no highly relevant links were found.",
             # TODO : instruct to introduce the link with a sentence that makes sense in the context of the new article.
-            #!"For more details on this topic, see our article on [**<article>**](<article url>)."  :this example is always used too stricly. It should be adapted to the context of the new article.
-            # TODO : do not assume that the article talk about somethink if it's not specified in the article summary.
             # TODO : it once confused our articles with the reliable sources. Add instructions : "Do not mix up the external sources that are already at the end of the article, with our own articles of {blog_base_url}"
         )
