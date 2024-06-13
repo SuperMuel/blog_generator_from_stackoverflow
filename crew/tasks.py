@@ -100,6 +100,7 @@ class CustomTasks:
                 Ensure that the feedback is constructive and actionable.
                 Do not suggest to add diagrams or images, as we can't generate them.
                 Do not suggest to change the sources or add new ones, as the sources are already validated. Do not talk about sources. 
+                Keep the "Further Reading" section intact as we already know the sources are reliable and useful.
                 Answer in the {language} language, while of course using English to structure your answer as instructed.
                 """  # TODO: Ensure that the code blocks written can run without any errors, or that explanations are provided for any errors that may occur. For instance, imports should be correct, or functions and variables not defined should be explained.
             ),
