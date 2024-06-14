@@ -71,6 +71,14 @@ def get_arguments():
         default="French",
         help="The language of the article (default: French).",
     )
+    parser.add_argument(
+        "-C",
+        "--context",
+        type=str,
+        default="",
+        help="Additional context to provide to the AI model.",
+    )
+
     # TODO : add ai model choice
     return parser.parse_args()
 
@@ -109,6 +117,7 @@ def main():
             llm=llm,
             topic=args.topic,
             language=args.language,
+            context=args.context,
             existing_articles=EXISTING_ARTICLES,
         )
         print(article)

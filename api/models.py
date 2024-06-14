@@ -19,6 +19,10 @@ class ArticleGenerationRequest(BaseModel):
         max_length=1000,
     )
     language: Optional[str] = "French"
+    context: Optional[str] = Field(
+        description="Additional context to provide to the AI model.",
+        examples=["Example.com is a digital services company based in Lyon."],
+    )
     callback_url: HttpUrl = Field(
         ...,
         title="The URL to send the article to, once it has been generated.",

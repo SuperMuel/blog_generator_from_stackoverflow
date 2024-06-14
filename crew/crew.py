@@ -13,6 +13,7 @@ def generate_article(
     llm: BaseChatModel,
     topic: str,
     language: str = "FR",
+    context: str = "",
     existing_articles: List[Dict] | None = None,
     global_step_callback: Callable | None = None,
 ) -> str:
@@ -101,4 +102,6 @@ def generate_article(
         step_callback=global_step_callback,
     )
 
-    return crew.kickoff(inputs={"topic": topic, "language": language})
+    return crew.kickoff(
+        inputs={"topic": topic, "language": language, "context": context}
+    )

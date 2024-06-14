@@ -21,13 +21,18 @@ logger = logging.getLogger(__name__)
 
 
 # TODO : async this
-def generate_article_and_callback(topic, language, callback_url, custom_args) -> None:
+def generate_article_and_callback(
+    topic, language, context, callback_url, custom_args
+) -> None:
     try:
-        logger.info(f"Generating article for topic: {topic} in language: {language}")
+        logger.info(
+            f"Generating article for topic: {topic} in language: {language}.\nContext : {context}"
+        )
         article = crew.generate_article(
             llm=AIModel.CLAUDE_3_SONNET.to_client(),  # TODO : add choice
             topic=topic,
             language=language,
+            context=context,
         )
         response = requests.post(
             callback_url,
@@ -48,9 +53,6 @@ def generate_article_and_callback(topic, language, callback_url, custom_args) ->
                 "custom_args": custom_args,
             },
         )
-
-
-# TODO :check https://fastapi.tiangolo.com/advanced/openapi-callbacks/
 
 
 app = FastAPI(
@@ -87,6 +89,7 @@ def generate_article(
         generate_article_and_callback,
         topic=article_request.topic,
         language=article_request.language,
+        context=article_request.context,
         callback_url=article_request.callback_url,
         custom_args=article_request.custom_args,
     )

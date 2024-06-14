@@ -79,6 +79,10 @@ class CustomAgents:
                 "You are a native speaker of {language} language and can write in markdown format. "
                 "You know how to apply feedback you receive on the topic and use your personal knowledge to make the necessary revisions."
                 "Metaphors are great for explaining a complicated subject."
+                "Here's the context of the user/company requesting the article : "
+                "<context>"
+                "{context}"
+                "</context> You can use this information to tailor the blog post to the user's needs."
                 # TODO : define the tone, style and structure of the blog post
             ),
             tools=[],

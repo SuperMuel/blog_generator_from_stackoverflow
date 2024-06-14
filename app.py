@@ -156,7 +156,6 @@ with st.sidebar:
     context = st.text_area(
         "Contexte (optionnel) :",
         placeholder="Example.com est une entreprise aux services du numérique implantée dans Lyon.",
-        disabled=True,  # Not supported yet
         height=100,
     )
 
@@ -202,6 +201,10 @@ def get_selected_articles() -> list[dict] | None:
 
 
 if submitted:
+    if not model:
+        st.error("Veuillez choisir un modèle d'IA.")
+        st.stop()
+
     with st.status(
         "🤖 **Agents au travail... Cela peut prendre quelques    minutes...**",
         state="running",
@@ -213,6 +216,7 @@ if submitted:
                     llm=model.to_client(),
                     topic=topic,
                     language=language,
+                    context=context,
                     existing_articles=get_selected_articles(),
                     global_step_callback=streamlit_callback,
                 )
