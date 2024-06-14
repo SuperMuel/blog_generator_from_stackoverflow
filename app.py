@@ -1,10 +1,16 @@
 # Layout inspired by :
 # https://github.com/tonykipkemboi/trip_planner_agent/blob/main/streamlit_app.py
 
-
 import streamlit as st
 from crew.ai_models import AIModel
 from crew.crew import generate_article
+import pandas as pd
+
+
+if "existing_articles" not in st.session_state:
+    # create empty dataframe with "title", "url" and "summary" columns
+    df = pd.DataFrame(columns=["title", "url", "summary"])
+    st.session_state["existing_articles"] = df
 
 
 # From https://github.com/tonykipkemboi/trip_planner_agent/blob/main/trip_agents.py
@@ -59,6 +65,8 @@ def streamlit_callback(step_output):
 st.set_page_config(
     page_icon="✏️",
     layout="wide",
+    page_title="Générateur d'articles",
+    menu_items={"Report a bug": "mailto:samuel@timtek.fr"},
 )
 
 
@@ -73,50 +81,124 @@ def icon(emoji: str):
 icon("✏️ Générateur d'articles")
 
 
+@st.experimental_dialog(  # type: ignore
+    "Vos anciens articles", width="large"
+)
+def show_existing_articles():
+    st.info(
+        "Les agents analyseront ces articles afin de les lier à votre nouveau contenu.",
+        icon="ℹ️",
+    )
+
+    config = {
+        "title": st.column_config.TextColumn(
+            "Titre",
+            width="large",
+            required=True,
+        ),
+        "url": st.column_config.TextColumn(
+            "Url",
+            required=True,
+            max_chars=500,
+            width="small",
+        ),
+        "summary": st.column_config.TextColumn(
+            "Résumé",
+            required=False,
+            max_chars=10000,
+        ),
+    }
+
+    initial_df = st.session_state["existing_articles"].copy()
+
+    edited_df = st.data_editor(
+        initial_df,
+        num_rows="dynamic",
+        column_config=config,
+        hide_index=True,
+    )
+
+    st.caption(
+        "Note : Vous pouvez copier-coller des lignes depuis un tableur pour les ajouter ici."
+    )
+
+    # TODO : check if modified
+
+    if st.button("💾 Sauvegarder les modifications"):
+        st.session_state["existing_articles"] = edited_df
+        st.success("Modifications sauvegardées !")
+        st.rerun()
+
+    if st.button("❌ Annuler"):
+        st.rerun()
+
+
 st.subheader(
     "Les agents IA travaillent pour vous ✨",
     divider=True,
     anchor=False,
 )
 with st.sidebar:
-    st.header("🔧 Paramètres")
-    with st.form(key="settings"):
-        topic = st.text_input(
-            "Entrez le sujet de l'article :",
-            placeholder="Rust vs Python en 2024",
-        )
-        language = st.selectbox(
-            "Choisissez la langue :",
-            options=[
-                "Français",
-                "Anglais",
-                "Espagnol",
-                "Allemand",
-            ],
-            index=0,
-        )
-        context = st.text_area(
-            "Contexte (optionnel) :",
-            placeholder="Example.com est une entreprise aux services du numérique implantée dans Lyon.",
-            disabled=True,  # Not supported yet
-            height=100,
+    topic = st.text_input(
+        "Entrez le sujet de l'article :",
+        placeholder="Rust vs Python en 2024",
+    )
+    language = st.selectbox(
+        "Choisissez la langue :",
+        options=[
+            "Français",
+            "Anglais",
+            "Espagnol",
+            "Allemand",
+        ],
+        index=0,
+    )
+    context = st.text_area(
+        "Contexte (optionnel) :",
+        placeholder="Example.com est une entreprise aux services du numérique implantée dans Lyon.",
+        disabled=True,  # Not supported yet
+        height=100,
+    )
+
+    checkbox_col, dialog_col = st.columns(2)
+
+    with checkbox_col:
+        make_internal_links = st.checkbox(
+            " 🔗 Maillage Interne",
+            help="Insérer des liens vers vos anciens articles pour améliorer le SEO ?",
+            value=True,
         )
 
-        # l'url de votre blog (optionnel)
-        blog_url = st.text_input(
-            "URL de votre blog (optionnel) :",
-            placeholder="https://example.com/blog",
-            disabled=True,  # Not supported yet
-        )
+    with dialog_col:
+        if st.button(
+            f"📚 Vos anciens articles ({len(st.session_state.existing_articles)})"
+        ):
+            show_existing_articles()
 
-        model = st.selectbox(
-            "Choisissez le modèle d'IA :",
-            options=AIModel.__members__.values(),
-            index=0,
-            format_func=lambda x: x.value,
-        )
+    model = st.selectbox(
+        "Choisissez le modèle d'IA :",
+        options=AIModel.__members__.values(),
+        index=0,
+        format_func=lambda x: x.value,
+    )
 
-        submitted = st.form_submit_button(":sparkles: Générer")
+    submitted = st.button(":sparkles: Générer")  # TODO : disable if already generating
+
+
+def get_selected_articles() -> list[dict] | None:
+    if not make_internal_links:
+        print("Linkage disabled")
+        return None
+
+    # show number of articles
+    print(f"Number of articles selected : {len(st.session_state['existing_articles'])}")
+
+    articles = st.session_state["existing_articles"].to_dict(orient="records")
+    assert isinstance(articles, list)
+    assert all("title" in article for article in articles)
+    assert all("url" in article for article in articles)
+
+    return articles
 
 
 if submitted:
@@ -131,7 +213,7 @@ if submitted:
                     llm=model.to_client(),
                     topic=topic,
                     language=language,
-                    existing_articles=None,
+                    existing_articles=get_selected_articles(),
                     global_step_callback=streamlit_callback,
                 )
                 status.update(
@@ -152,7 +234,7 @@ else:  # if not submitted
         1. Entrez le sujet de l'article.
         2. Choisissez la langue.
         3. (Optionnel) Ajoutez un contexte afin que les agents comprennent mieux votre besoin.
-        4. (Optionnel) Ajoutez l'URL de votre blog, afin que les agents trouvent vos anciens articles et les lient.
+        4. (Optionnel) Cochez la case pour activer le maillage interne, et sélectionnez vos anciens articles pour améliorer le SEO.
         5. Cliquez sur **:sparkles: Générer**.
         """
     )
