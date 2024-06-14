@@ -1,5 +1,7 @@
 # StackBlog: StackOverflow Blog Generator
 
+![Streamlit app screenshot](./images/streamlit-screenshot.png)
+
 This project is an automated solution for generating detailed and informative blog posts based on Stack Overflow discussions. Using CrewAI and multiple AI agents, it
 searches for relevant Stack Overflow posts, extracts the most important information, and compiles it into a comprehensive and engaging blog post.
 
@@ -37,8 +39,16 @@ Once you have the API keys, copy the `.env.example` file to `.env` and add the A
 
 # Run locally
 
+## Command line
+
 ```sh
 python generate_article "Your topic"
+```
+
+## Streamlit app
+
+```sh
+streamlit run app.py
 ```
 
 # Run the API Server
@@ -100,66 +110,3 @@ heroku ps:scale web=1
 ```sh
 heroku open
 ```
-
-## API Endpoints
-
-### Generate Article
-
-- **Endpoint**: `/generate-article`
-- **Method**: `POST`
-- **Payload**:
-
-  ```json
-  {
-    "topic": "Your topic here",
-    "language": "Language here (e.g., 'EN', 'FR' or 'French')",
-    "callback_url": "Your callback URL here",
-
-    // Optional
-    "custom_args": {
-      "key1": "value1",
-      "key2": "value2"
-    }
-  }
-  ```
-
-- **Response**:
-  ```json
-  {
-    "message": "Article generation started"
-  }
-  ```
-
-### Callback URL Response
-
-Once the article is generated, the server will send a POST request to the provided `callback_url` with the following payload:
-
-- **Success Response**:
-
-  ```json
-  {
-    "article": "Generated article content here"
-
-    // If custom_args are provided in the request
-    "custom_args": {
-      "key1": "value1",
-      "key2": "value2"
-    }
-  }
-  ```
-
-- **Error Response** (if an error occurs during article generation):
-
-  ```json
-  {
-    "error": "Error message here"
-
-    // If custom_args are provided in the request
-    "custom_args": {
-      "key1": "value1",
-      "key2": "value2"
-    }
-  }
-  ```
-
-//TODO : Use fastAPI and generate documentation
