@@ -11,5 +11,7 @@ pydantic
 
 
 streamlit
+st-copy-to-clipboard
+
 # This is only necessary for linux, on Streamlit's servers
 pysqlite3-binary
