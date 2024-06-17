@@ -8,6 +8,7 @@ pathvalidate
 langsmith
 fastapi
 pydantic
+lorem
 
 
 streamlit
