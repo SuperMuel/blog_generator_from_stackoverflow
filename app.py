@@ -5,6 +5,25 @@ import streamlit as st
 from crew.ai_models import AIModel
 from crew.crew import generate_article
 import pandas as pd
+import lorem
+
+from st_copy_to_clipboard import st_copy_to_clipboard
+
+
+def mock_article(
+    title: str = "Article", nb_paragraphs: int = 5, nb_subsections: int = 3
+) -> str:
+    if not title:
+        title = "Article"
+    result = f"# {title}"
+    for i in range(nb_paragraphs):
+        result += "\n\n" + f"## Paragraphe {i+1}"
+        for j in range(nb_subsections):
+            result += "\n\n" + f"### Sous-section {chr(65 + j)}"
+            p = lorem.paragraph()
+            result += "\n\n" + p
+
+    return result
 
 
 if "existing_articles" not in st.session_state:
@@ -230,6 +249,11 @@ if submitted:
 
     if result:
         st.markdown(result)
+        st_copy_to_clipboard(
+            result,
+            before_copy_label="📋 Copier l'article généré",
+            after_copy_label="✅ Texte copié !",
+        )
 
 else:  # if not submitted
     st.markdown(
