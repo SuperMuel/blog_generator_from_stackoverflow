@@ -79,6 +79,7 @@ class CustomTasks:
                 Ensure that the article starts with a h1 with the title of the blog post. e.g. "# Title of the blog post"
                 Conclude with a 'Further Reading' section, listing only the reliable sources discovered, no invented references.
                 Do not explain that the sources are reliable, just list them using the markdown link format.
+                Never add additional links that were not given to you.
                 """
             ),
             expected_output='A 700 words markdown formatted blog post on "{topic}" in {language}.',
@@ -101,6 +102,7 @@ class CustomTasks:
                 Do not suggest to add diagrams or images, as we can't generate them.
                 Do not suggest to change the sources or add new ones, as the sources are already validated. Do not talk about sources. 
                 Keep the "Further Reading" section intact as we already know the sources are reliable and useful.
+                NEVER suggest to add additional sources.
                 Answer in the {language} language. Don't force yourself to use 100% {language} terms if it's not natural. For instance, do not translate "bug" to "bogue" in a French article, but use "bug" instead.
                 While your feedback should be written in {language}, you must respect the format of your answer : keep the terms "Thought: " or "Final Answer" in English as requested by the instructions. 
                 """  # TODO: Ensure that the code blocks written can run without any errors, or that explanations are provided for any errors that may occur. For instance, imports should be correct, or functions and variables not defined should be explained.
