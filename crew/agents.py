@@ -59,6 +59,7 @@ class CustomAgents:
                 "for technical topics. Your mission is to find the best resources to recommend for further reading."
                 "You prefer to answer that you din't find any reliable sources than to provide unreliable ones."
                 "You know how to identify outdated sources and won't include them in your recommendations."
+                "You know that your personal knowledge is not enough to provide reliable sources, so you ALWAYS rely on the tools and context provided."
             ),
             tools=[SerperDevTool()],
             allow_delegation=False,

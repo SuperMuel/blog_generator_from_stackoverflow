@@ -47,6 +47,7 @@ class CustomTasks:
             description=dedent(
                 """
                 Use the SerperDev tool to search for reliable sources related to '{topic}'.
+                NEVER rely on your personal knowledge to provide reliable sources. Always rely on the tools and context provided.
                 Focus on finding authoritative and reputable sources such as official documentation.
                 You can use multiple web searches using different keywords to find the best sources.
                 Avoid sources like SEO-driven blogs or forums unless they are highly reputable.
@@ -59,6 +60,8 @@ class CustomTasks:
                 If it is redundant, don't include it in the list and prefer to keep your list small.
 
                 Even if the topic is in a foreign language, you prefer to do web searches with an english query because it's the most common language for programming. You don't need to translate your results.
+
+                Important note : If the tool do not work, or if you can't find any reliable sources, you should answer that you didn't find any reliable sources, or answer with an empty list. Never use your personal knowledge to provide sources.
                 """
             ),
             expected_output="A list of reliable sources for further reading. Between 0 and 3 sources.",
