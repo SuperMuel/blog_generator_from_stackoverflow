@@ -176,6 +176,7 @@ class CustomTasks:
             Before you proceed, list the articles you plan to link to and their positions in the new article, along with a short explanation of why each link is highly relevant in the context of the new article.
 
             When you finish, provide the revised article with the added links. If no changes were made, return the original article.
+            ALWAYS RETURN THE ENTIRE ARTICLE, NOT JUST THE CHANGES.
             """
             ),
             agent=agent,
