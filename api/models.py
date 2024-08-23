@@ -1,13 +1,7 @@
-from pydantic import BaseModel, Field, UrlConstraints
-from typing import Annotated, Optional, Dict
+from pydantic import BaseModel, Field
+from typing import Optional, Dict
 
-from pydantic_core import Url
-
-
-HttpUrl = Annotated[
-    Url,
-    UrlConstraints(max_length=2083, allowed_schemes=["http", "https"]),
-]
+from pydantic import HttpUrl
 
 
 class ArticleGenerationRequest(BaseModel):

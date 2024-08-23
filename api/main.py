@@ -29,7 +29,7 @@ def generate_article_and_callback(
             f"Generating article for topic: {topic} in language: {language}.\nContext : {context}"
         )
         article = crew.generate_article(
-            llm=AIModel.CLAUDE_3_SONNET.to_client(),  # TODO : add choice
+            llm=AIModel.CLAUDE_35_SONNET.to_client(),  # TODO : add choice
             topic=topic,
             language=language,
             context=context,
@@ -57,7 +57,6 @@ def generate_article_and_callback(
 
 app = FastAPI(
     title="Article Generation API",
-    version="0.1.0",
     description="API to generate articles using CrewAI and results from StackOverflow.",
 )
 

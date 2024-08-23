@@ -100,7 +100,7 @@ def icon(emoji: str):
 icon("✏️ Générateur d'articles")
 
 
-@st.experimental_dialog(  # type: ignore
+@st.dialog(  # type: ignore
     "Vos anciens articles", width="large"
 )
 def show_existing_articles():
@@ -170,8 +170,8 @@ with st.sidebar:
             "Espagnol",
             "Allemand",
         ],
-        index=0,
     )
+    assert language
     context = st.text_area(
         "Contexte (optionnel) :",
         placeholder="Example.com est une entreprise aux services du numérique implantée dans Lyon.",

@@ -1,6 +1,6 @@
-from typing import Callable, Dict, List
+from typing import Callable, Dict
 
-from crewai import Agent, Crew, Process, Task
+from crewai import Crew, Process
 from langsmith import traceable
 from langchain_core.language_models.chat_models import BaseChatModel
 
@@ -14,7 +14,7 @@ def generate_article(
     topic: str,
     language: str = "FR",
     context: str = "",
-    existing_articles: List[Dict] | None = None,
+    existing_articles: list[Dict] | None = None,
     global_step_callback: Callable | None = None,
 ) -> str:
     """Kickoff the crew to generate an article based on the given topic and language.
@@ -74,7 +74,7 @@ def generate_article(
         else None
     )
 
-    agents_list: List[Agent] = [
+    agents_list = [
         search_agent,
         report_agent,
         reliable_sources_agent,
@@ -83,7 +83,7 @@ def generate_article(
         internal_linking_agent,
     ]
 
-    tasks_list: List[Task] = [
+    tasks_list = [
         search_task,
         report_task,
         reliable_sources_task,
@@ -104,4 +104,4 @@ def generate_article(
 
     return crew.kickoff(
         inputs={"topic": topic, "language": language, "context": context}
-    )
+    ).raw

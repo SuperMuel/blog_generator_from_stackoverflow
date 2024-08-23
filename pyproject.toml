@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "blog-generator-from-stackoverflow"
+version = "0.1.0"
+description = ""
+authors = ["Samuel Mallet  <69467005+SuperMuel@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<=3.13"
+crewai = {version = "^0.51.1", extras = ["tools"]}
+pydantic = "^2.8.2"
+langchain = "^0.2.14"
+langchain-anthropic = "^0.1.23"
+langchain-openai = "^0.1.22"
+python-dotenv = "^1.0.1"
+gunicorn = "^23.0.0"
+pathvalidate = "^3.2.0"
+fastapi = "^0.112.1"
+lorem = "^0.1.1"
+streamlit = "^1.37.1"
+st-copy-to-clipboard = "^0.1.6"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
