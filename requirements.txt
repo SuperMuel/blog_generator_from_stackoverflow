@@ -3,7 +3,6 @@ crewai[tools]
 langchain-anthropic
 python-dotenv
 gunicorn
-agentops
 pathvalidate
 langsmith
 fastapi

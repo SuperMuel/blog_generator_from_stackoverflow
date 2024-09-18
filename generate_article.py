@@ -2,7 +2,6 @@ import argparse
 import os
 from datetime import datetime
 
-import agentops
 from dotenv import load_dotenv
 from pathvalidate import sanitize_filename
 
@@ -59,8 +58,6 @@ def main():
     """Main function to generate and save the article."""
     args = get_arguments()
 
-    agentops.init()
-
     llm = AIModel.GPT_4O_MINI.to_client()
 
     try:
@@ -78,14 +75,9 @@ def main():
         print(f"Article saved to {path}")
 
     except KeyboardInterrupt:
-        agentops.end_session("Fail", end_state_reason="User Interrupted")
         print("Operation cancelled by user.")
     except Exception as e:
         print(f"Error generating article: {e}")
-        agentops.end_session("Fail", end_state_reason=str(e))
-    else:
-        agentops.end_session("Success")
-
 
 if __name__ == "__main__":
     load_dotenv()
