@@ -1,17 +1,16 @@
-crewai
-crewai[tools]
-langchain-anthropic
-python-dotenv
-gunicorn
-pathvalidate
 langsmith
-fastapi
-pydantic
-lorem
-
-
-streamlit
-st-copy-to-clipboard
+crewai[tools]==0.51.1
+pydantic==2.8.2
+langchain==0.2.14
+langchain-anthropic==0.1.23
+langchain-openai==0.1.22
+python-dotenv==1.0.1
+gunicorn==23.0.0
+pathvalidate==3.2.0
+fastapi==0.112.1
+lorem==0.1.1
+streamlit==1.37.1
+st-copy-to-clipboard==0.1.6
 
 # This is only necessary for linux, on Streamlit's servers
 pysqlite3-binary
